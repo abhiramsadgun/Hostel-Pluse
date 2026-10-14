@@ -1,0 +1,153 @@
+### ========================================================
+### HOSTELPULSE FOUNDATION API - REST CLIENT SUITE
+### Base URL: http://localhost:5000/api/v1
+### ========================================================
+
+@baseUrl = http://localhost:5000/api/v1
+
+### 1. Health Check
+GET http://localhost:5000/health
+
+### 2. Get Hostel Blocks (Gender filtered or all)
+GET {{baseUrl}}/auth/blocks?gender=male
+
+### 3. Warden Login (Male Block Warden Vikram)
+# @name wardenLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "identifier": "W-MALE-101",
+  "password": "Password@123"
+}
+
+### Store Token Variable from Login Response
+@wardenToken = {{wardenLogin.response.body.data.token}}
+
+### 4. Warden Views Pending Students (Scoped strictly to Boys Block A)
+GET {{baseUrl}}/auth/pending-students
+Authorization: Bearer {{wardenToken}}
+
+### 5. Warden Approves Student Registration
+POST {{baseUrl}}/auth/students/5/approve
+Authorization: Bearer {{wardenToken}}
+Content-Type: application/json
+
+{}
+
+### 6. Approved Student Login (Laminated ID)
+# @name studentLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "identifier": "HID-BBA-001",
+  "password": "Password@123"
+}
+
+@studentToken = {{studentLogin.response.body.data.token}}
+
+### 7. Student Profile & Assigned Warden Verification
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{studentToken}}
+
+### 8. View Weekly Dining Menus & Cut-Off Config
+GET {{baseUrl}}/food/menu
+Authorization: Bearer {{studentToken}}
+
+### 9. Student Submits Next Day's Meal Preference
+POST {{baseUrl}}/food/preferences
+Authorization: Bearer {{studentToken}}
+Content-Type: application/json
+
+{
+  "mealDate": "2026-10-16",
+  "mealType": "lunch",
+  "selectedOptionId": "opt_nonveg_lunch"
+}
+
+### 10. Student Views Their Recorded Preferences
+GET {{baseUrl}}/food/preferences
+Authorization: Bearer {{studentToken}}
+
+### 11. Mess Staff Login
+# @name messLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "identifier": "mess@hostelpulse.edu",
+  "password": "Password@123"
+}
+
+@messToken = {{messLogin.response.body.data.token}}
+
+### 12. Mess Staff Generates Daily Meal Count Report (Excludes approved outpasses)
+GET {{baseUrl}}/food/report?date=2026-10-16
+Authorization: Bearer {{messToken}}
+
+### 13. Student Checks In-App Notifications
+GET {{baseUrl}}/notifications
+Authorization: Bearer {{studentToken}}
+
+### 14. Student Marks Notification as Read
+PUT {{baseUrl}}/notifications/1/read
+Authorization: Bearer {{studentToken}}
+
+### 15. Forgot Password - Request 6-digit OTP
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "rahul.sharma@hostelpulse.edu"
+}
+
+### 16. Admin Chief Warden Login
+# @name adminLogin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "identifier": "admin@hostelpulse.edu",
+  "password": "Password@123"
+}
+
+@adminToken = {{adminLogin.response.body.data.token}}
+
+### 17. Admin Dashboard Overview Statistics
+GET {{baseUrl}}/admin/stats
+Authorization: Bearer {{adminToken}}
+
+### 18. Admin Creates New Block
+POST {{baseUrl}}/admin/blocks
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Ramanujan Boys Block C",
+  "code": "RBC",
+  "gender": "male",
+  "totalFloors": 4,
+  "description": "New postgraduate boys wing"
+}
+
+### 19. Admin Pre-loads Warden to Roster (Instant auto-approval upon sign-up)
+POST {{baseUrl}}/admin/wardens/preload
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "collegeIdNumber": "W-MALE-301",
+  "fullName": "Dr. Rajesh Khanna",
+  "email": "rajesh.khanna@hostelpulse.edu",
+  "gender": "male",
+  "blockId": 1
+}
+
+### 20. Admin Audit Logs
+GET {{baseUrl}}/admin/audit-logs
+Authorization: Bearer {{adminToken}}
+
+### 21. Query Maintenance Auto-Assignees by Category (Contract for Complaints Teammate)
+GET {{baseUrl}}/admin/maintenance/assignees?category=Plumbing+%26+Water+Supply
+Authorization: Bearer {{adminToken}}

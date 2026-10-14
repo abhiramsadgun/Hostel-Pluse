@@ -1,0 +1,23 @@
+{
+  "name": "hostelpulse",
+  "version": "1.0.0",
+  "description": "Hostel Complaint Management System - Core Foundation Layer",
+  "scripts": {
+    "dev": "npm --prefix client run dev",
+    "install:all": "npm --prefix server install && npm --prefix client install",
+    "server:install": "npm --prefix server install",
+    "client:install": "npm --prefix client install",
+    "server:dev": "npm --prefix server run dev",
+    "server:start": "npm --prefix server run start",
+    "server:test": "npm --prefix server test",
+    "server:seed": "npm --prefix server run seed",
+    "server:migrate": "npm --prefix server run migrate",
+    "client:dev": "npm --prefix client run dev",
+    "client:build": "npm --prefix client run build",
+    "seed": "npm --prefix server run seed",
+    "test": "npm --prefix server test"
+  },
+  "keywords": ["hostel", "complaints", "management", "foundation", "express", "react"],
+  "author": "HostelPulse Team",
+  "license": "ISC"
+}
