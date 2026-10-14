@@ -2,7 +2,15 @@
 
 HostelPulse is a modern Hostel Complaint Management and Administrative System built for university campus residential communities. This repository contains the **FOUNDATION LAYER** upon which subsequent modules (**Complaints/AI Dispatch**, **Outpass/Room Allocation**, and **Resident Healthcare**) are constructed.
 
----
+------------------------------------------------------------------------------------------------------------------
+
+## 🌐 Live Deployment
+
+**Live Demo:** [HostelPulse — Hostel Complaint Management System](YOUR_RENDER_DEPLOYED_URL)
+
+> **Note:** The application is hosted on Render's free tier. The first request after a period of inactivity may take some time while the service starts.
+
+--------------------------------------------------------------------------------------------------------------------------
 
 ## 🏗️ Architecture & Technology Stack
 
