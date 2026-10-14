@@ -6,7 +6,7 @@ HostelPulse is a modern Hostel Complaint Management and Administrative System bu
 
 ## 🌐 Live Deployment
 
-**Live Demo:** [HostelPulse — Hostel Complaint Management System](YOUR_RENDER_DEPLOYED_URL)
+**Live Demo:** [[HostelPulse — Hostel Complaint Management System](YOUR_RENDER_DEPLOYED_URL)](https://hostel-pluse.onrender.com/)
 
 > **Note:** The application is hosted on Render's free tier. The first request after a period of inactivity may take some time while the service starts.
 
