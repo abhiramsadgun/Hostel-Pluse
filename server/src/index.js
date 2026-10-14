@@ -1,10 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const fs = require('fs');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 require('dotenv').config();
 // Server entrypoint - HostelPulse Foundation API (Reloaded)
 
-const path = require('path');
 const { initDb } = require('./db');
 const authRoutes = require('./modules/auth/auth.routes');
 const foodRoutes = require('./modules/food/food.routes');
@@ -30,8 +32,18 @@ app.use(morgan('dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Auto-create uploads directory at startup if missing
+const uploadsDir = path.join(__dirname, '../uploads');
+const complaintsDir = path.join(uploadsDir, 'complaints');
+const idsDir = path.join(uploadsDir, 'ids');
+[uploadsDir, complaintsDir, idsDir].forEach((dir) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+});
+
 // Static file serving for photos (IDs and complaint evidence)
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads', express.static(uploadsDir));
 
 // Health Check & Root
 app.get('/health', (req, res) => {
@@ -47,6 +59,10 @@ app.get('/health', (req, res) => {
   });
 });
 
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Mount Routes with /api/v1 prefix
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/food', foodRoutes);
@@ -59,6 +75,18 @@ app.use('/api/v1/services', servicesRoutes);
 app.use('/api/v1/outpass', outpassRoutes);
 app.use('/api/v1/health', healthRoutes);
 app.use('/api/v1/rooms', roomsRoutes);
+
+// Client static serving for single-URL and production builds
+const clientDist = path.resolve(__dirname, '../../client/dist');
+if (fs.existsSync(clientDist)) {
+  app.use(express.static(clientDist));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads') || req.path.startsWith('/health')) {
+      return next();
+    }
+    res.sendFile(path.join(clientDist, 'index.html'));
+  });
+}
 
 // 404 Handler
 app.use((req, res) => {

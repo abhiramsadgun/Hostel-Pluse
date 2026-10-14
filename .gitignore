@@ -1,26 +1,40 @@
 # Dependencies
 node_modules/
+**/node_modules/
 
-# Build output
+# Build output & artifacts
+dist/
 client/dist/
+build/
+*.tsbuildinfo
 
 # Environment variables
 .env
 .env.*
+.env.local
+.env.production
 !.env.example
+!**/.env.example
 
 # Logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Local uploads and user data
-server/uploads/avatars/
-server/uploads/ids/
+server/uploads/avatars/*
+!server/uploads/avatars/.gitkeep
+server/uploads/ids/*
+!server/uploads/ids/.gitkeep
+server/uploads/complaints/*
+!server/uploads/complaints/.gitkeep
 
 # OS and editor files
 .DS_Store
 Thumbs.db
 .vscode/
+.idea/
 
 # IDE helper
 powershell.cmd

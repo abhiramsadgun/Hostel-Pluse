@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Hostel Complaint Management System - Core Foundation Layer",
   "scripts": {
+    "build": "npm --prefix server install && npm --prefix client install && npm --prefix client run build",
+    "start": "node server/src/index.js",
     "dev": "npm --prefix client run dev",
     "install:all": "npm --prefix server install && npm --prefix client install",
     "server:install": "npm --prefix server install",

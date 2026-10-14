@@ -12,10 +12,16 @@ async function initDb() {
   const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/hostelpulse';
   
   // Try real PostgreSQL connection
-  const realPool = new Pool({
+  const poolConfig = {
     connectionString,
     connectionTimeoutMillis: 2000, // 2s quick probe
-  });
+  };
+
+  if (process.env.DATABASE_URL) {
+    poolConfig.ssl = { rejectUnauthorized: false };
+  }
+
+  const realPool = new Pool(poolConfig);
 
   try {
     const client = await realPool.connect();
